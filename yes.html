@@ -31,5 +31,27 @@
 
 
     <script src="yes-script.js"></script>
+    <script>
+        // If user refreshes/reloads this page, restart the flow from index.html
+        (function () {
+            try {
+                const navEntries = performance.getEntriesByType('navigation');
+                const navType = navEntries && navEntries[0] ? navEntries[0].type : '';
+
+                if (navType === 'reload') {
+                    window.location.replace('index.html');
+                }
+            } catch (e) {
+                // If Performance API is unavailable, do nothing.
+            }
+
+            // Also handle typical refresh via BFCache restore.
+            window.addEventListener('pageshow', function (event) {
+                if (event && event.persisted) {
+                    window.location.replace('index.html');
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
